@@ -21,18 +21,6 @@
   display: none !important;
 }
 
-.logo {
-  background: url(swiss-ai/assets/logos/Apertus%202606%20-%20Logo%20-%20Text%20only.svg);
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 200px;
-  height: 24px;
-}
-.logo .logo-text {
-  font-size: 0px;
-  color: transparent;
-}
-
 /* --------------------------------------------------------------------------
    Status chip — mono, uppercase, technical (header)
    -------------------------------------------------------------------------- */
