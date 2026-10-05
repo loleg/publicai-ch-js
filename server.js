@@ -39,7 +39,8 @@ const DEMO_ROOT = path.resolve(__dirname);
 
 const BASE_URL = (
   process.env.APERTUS_BASE_URL ||
-  process.env.OPENAI_BASE_URL).replace(/\/+$/, '');
+  process.env.OPENAI_BASE_URL ||
+  '').replace(/\/+$/, '');
 const API_KEY = process.env.APERTUS_API_KEY || process.env.OPENAI_API_KEY || '';
 const MODEL = process.env.APERTUS_MODEL;
 
@@ -271,9 +272,13 @@ async function handler(req, res) {
 
 const server = http.createServer(handler);
 
-// Exported for the zero-dependency smoke test (test/smoke.js); the server only
-// binds a port when this file is run directly.
-module.exports = { handler, BASE_URL, MODEL };
+// The module's default export is the request handler
+module.exports = Object.assign(handler, {
+  default: handler,
+  handler,
+  BASE_URL,
+  MODEL,
+});
 
 if (require.main === module) {
   server.on('error', (error) => {
