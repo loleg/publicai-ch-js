@@ -1,0 +1,559 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Apertus demo — chat, composer, attachments, and notices.
+ * Demo-scoped styling only: tokens and primitives come from ../src/styles/.
+ * Contrast notes follow the design system's verified pairs. */
+
+/* --------------------------------------------------------------------------
+   Intro band — pale technical panel (Apertus surface role)
+   -------------------------------------------------------------------------- */
+.demo-intro {
+  background-color: var(--md-sys-color-surface-technical);
+  border-block-end: 1px solid var(--md-sys-color-outline-variant);
+  padding-block: var(--space-48) var(--space-48);
+}
+
+.demo-intro .lead-text {
+  max-width: 720px;
+  margin-block-end: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.logo {
+  background: url(swiss-ai/assets/logos/Apertus%202606%20-%20Logo%20-%20Text%20only.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 200px;
+  height: 24px;
+}
+.logo .logo-text {
+  font-size: 0px;
+  color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   Status chip — mono, uppercase, technical (header)
+   -------------------------------------------------------------------------- */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-12);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-sm);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  font-weight: var(--md-sys-typescale-mono-small-weight);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--md-sys-color-outline);
+  flex-shrink: 0;
+}
+
+.status-chip[data-state="checking"] .status-dot {
+  animation: status-pulse 1.2s ease-in-out infinite;
+}
+
+.status-chip[data-state="ready"] .status-dot {
+  background-color: var(--md-sys-color-secondary); /* Apertus sky */
+}
+
+.status-chip[data-state="error"] .status-dot {
+  background-color: var(--md-sys-color-error);
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Chat section and log
+   -------------------------------------------------------------------------- */
+.chat-section {
+  padding-block: var(--space-48) var(--space-64);
+}
+
+.chat-shell {
+  max-width: 880px;
+  margin-inline: auto;
+  padding-inline: var(--space-24);
+  display: grid;
+  gap: var(--space-24);
+}
+
+.chat-log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-24);
+}
+
+/* Empty state — hexagonal technical emblem on a pale wash */
+.chat-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-12);
+  text-align: center;
+  padding: var(--space-48);
+  background-color: var(--md-sys-color-surface-technical-wash);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-default);
+}
+
+.chat-empty-title {
+  font-family: var(--md-ref-typeface-brand);
+  font-weight: var(--md-ref-weight-black);
+  font-size: var(--md-sys-typescale-title-small-size);
+  margin: 0;
+}
+
+.chat-empty .mono-caption {
+  margin-block-end: 0;
+}
+
+.empty-emblem {
+  width: 72px;
+  height: 72px;
+  color: var(--md-sys-color-secondary);
+}
+
+.sample-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-8);
+  margin-block-start: var(--space-8);
+}
+
+/* --------------------------------------------------------------------------
+   Messages
+   User bubbles wear the Apertus sky surface with anthracite text (6.3:1);
+   assistant bubbles stay paper-white with a subtle technical border.
+   -------------------------------------------------------------------------- */
+.message {
+  display: grid;
+  gap: var(--space-8);
+  max-width: 76ch;
+}
+
+.message--user {
+  margin-inline-start: auto;
+  justify-items: end;
+}
+
+.message--assistant {
+  margin-inline-end: auto;
+}
+
+.message--error {
+  max-width: 100%;
+}
+
+.message-role {
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  font-weight: var(--md-sys-typescale-mono-small-weight);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.message-bubble {
+  padding: var(--space-16) var(--space-24);
+  border-radius: var(--radius-default);
+  overflow-wrap: break-word;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.message--user .message-bubble {
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+.message--assistant .message-bubble {
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+}
+
+.message--error .message-bubble {
+  background-color: var(--md-sys-color-error-container);
+  border: 1px solid rgba(179, 38, 30, 0.45);
+  color: var(--md-sys-color-on-error-container);
+  width: auto;
+}
+
+.message-bubble p {
+  margin: 0 0 var(--space-8);
+}
+
+.message-bubble p:last-child {
+  margin-block-end: 0;
+}
+
+.message-bubble code {
+  font-family: var(--md-ref-typeface-mono);
+  font-size: 0.9em;
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+}
+
+.message-bubble strong {
+  font-weight: var(--md-ref-weight-bold);
+}
+
+/* Streaming caret — subtle, disabled under reduced motion */
+.message-bubble.is-streaming::after {
+  content: "▍";
+  margin-inline-start: 2px;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Attachments inside messages */
+.message-attachments {
+  display: grid;
+  gap: var(--space-8);
+  justify-items: start;
+  margin-block-start: var(--space-8);
+}
+
+.message--user .message-attachments {
+  justify-items: end;
+}
+
+.attachment-image {
+  max-width: min(320px, 100%);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(46, 47, 49, 0.16);
+}
+
+.message--user .attachment-image {
+  border: 2px solid var(--md-sys-color-surface-container-lowest);
+}
+
+.attachment-audio {
+  min-width: min(280px, 100%);
+}
+
+.attachment-audio audio {
+  width: 100%;
+}
+
+.attachment-caption {
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  overflow-wrap: anywhere;
+}
+
+.message--user .attachment-caption {
+  color: var(--md-sys-color-on-secondary);
+}
+
+/* Message actions — 44px targets (edit / regenerate a prompt) */
+.message-actions {
+  display: flex;
+  gap: var(--space-8);
+}
+
+.message-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-sm);
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.message-action:hover {
+  background-color: var(--md-sys-color-surface-technical-wash);
+  border-color: var(--md-sys-color-outline-blue);
+}
+
+.message-action .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Composer
+   -------------------------------------------------------------------------- */
+.composer {
+  display: grid;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background-color: var(--md-sys-color-surface-container-lowest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-default);
+}
+
+.composer:focus-within {
+  border-color: var(--md-sys-color-outline-blue);
+}
+
+.composer-row {
+  display: grid;
+}
+
+#prompt-input {
+  font: inherit;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-sm);
+  padding: var(--space-12) var(--space-16);
+  width: 100%;
+  min-height: 48px;
+  max-height: 220px;
+  resize: none;
+}
+
+#prompt-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+#prompt-input:focus-visible,
+#prompt-input:focus {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--md-sys-color-outline-blue);
+}
+
+.composer-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.composer-spacer {
+  flex: 1;
+}
+
+.attach-button .icon {
+  width: 20px;
+  height: 20px;
+  margin-inline-end: var(--space-8);
+}
+
+.composer-hint {
+  margin: 0;
+}
+
+/* Edit bar — regeneration context above the composer */
+.edit-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-12);
+  background-color: var(--md-sys-color-surface-technical);
+  border: 1px solid var(--md-sys-color-outline-blue);
+  border-radius: var(--radius-sm);
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  color: var(--md-sys-color-on-surface);
+}
+
+/* --------------------------------------------------------------------------
+   Attachment tray (pending uploads in the composer)
+   -------------------------------------------------------------------------- */
+.attachment-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.attachment-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-8) var(--space-4) var(--space-4);
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--radius-sm);
+}
+
+.attachment-chip img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.attachment-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.chip-name {
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  color: var(--md-sys-color-on-surface-variant);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.attachment-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin-inline-end: calc(-1 * var(--space-4));
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--md-sys-color-on-surface-variant);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.attachment-remove:hover {
+  background-color: var(--md-sys-color-surface-technical);
+  color: var(--md-sys-color-on-surface);
+}
+
+.attachment-remove .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Notices — info on pale wash, warnings on the error container
+   -------------------------------------------------------------------------- */
+.notice-region {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-12);
+  padding: var(--space-12) var(--space-16);
+  border-radius: var(--radius-sm);
+  font-size: var(--md-sys-typescale-body-small-size);
+}
+
+.notice-text {
+  margin: 0;
+}
+
+.notice--info {
+  background-color: var(--md-sys-color-surface-technical-wash);
+  border: 1px solid var(--md-sys-color-outline-blue);
+  color: var(--md-sys-color-on-surface);
+}
+
+.notice--warn {
+  background-color: var(--md-sys-color-error-container);
+  border: 1px solid rgba(179, 38, 30, 0.45);
+  color: var(--md-sys-color-on-error-container);
+}
+
+.notice-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -12px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.notice-dismiss:hover {
+  background-image: linear-gradient(rgba(46, 47, 49, 0.08), rgba(46, 47, 49, 0.08));
+}
+
+.notice-dismiss .icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion — disable the pulse and caret animations
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .status-chip[data-state="checking"] .status-dot {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  .message-bubble.is-streaming::after {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Small screens — keep the shell inside 320px viewports
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .chat-shell {
+    padding-inline: var(--space-16);
+  }
+
+  .chat-empty {
+    padding: var(--space-24);
+  }
+
+  .message-bubble {
+    padding: var(--space-12) var(--space-16);
+  }
+
+  .message {
+    max-width: 100%;
+  }
+}

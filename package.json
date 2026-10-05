@@ -1,0 +1,23 @@
+{
+  "name": "apertus-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Single-page Apertus demo (Hugging Face chat-style UI) built with the swiss-ai.org design system, backed by a zero-dependency Node.js proxy to an OpenAI-compatible API.",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.js"
+  },
+  "keywords": [
+    "apertus",
+    "swiss-ai",
+    "design-system",
+    "chat",
+    "openai-compatible"
+  ],
+  "author": "Swiss-ai.org Team",
+  "license": "Apache-2.0"
+}
