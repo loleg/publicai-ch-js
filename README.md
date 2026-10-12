@@ -4,7 +4,7 @@ A standalone chat client in the spirit of the Hugging Face chat interface: attac
 clips, edit any prompt to regenerate from that point, and stream answers from an
 OpenAI-compatible API through a small Node.js proxy. An embeddable widget
 (`assets/widget.js`) opens the same chat as a pop-up on any third-party website —
-see [Chat widget for third-party websites](#chat-widget-for-third-party-websites).
+see [Chat widget](#chat-widget).
 
 The UI is based on the design system of [swiss-ai.org](https://swiss-ai.github.io/design-system/)
 
@@ -18,9 +18,9 @@ npm start            # or: node server.js
 Then open <http://localhost:5173/>. No npm dependencies are required —
 the proxy uses Node.js core modules only (Node ≥ 18 for `fetch` and web streams).
 
-You can also open `index.html` directly from the file system: the page renders, and the
-client falls back to `http://localhost:5173/api` so it works alongside a
-locally running server.
+A running server or deployment is required: the page must be served over
+http(s). Opening `index.html` directly from the file system (`file://`) is not
+supported.
 
 Validation (no dependencies, no network — exercises the request handler with mocks):
 
@@ -73,8 +73,10 @@ and a high stacking-order header).
 ```
 
 That is all when the script is served by the deployment itself — the widget
-derives the deployment origin from its own URL. If you mirror `widget.js` onto
-a CDN or another origin, point it at the deployment with `data-url`:
+derives the deployment origin from its own URL. There is no fallback: a
+deployment is required, and `file://` pages are not supported. If you mirror
+`widget.js` onto a CDN or another origin, point it at the deployment with
+`data-url`:
 
 ```html
 <script src="https://<your address>/apertus/widget.js"
@@ -170,8 +172,8 @@ page provides them and falls back to system fonts otherwise.
 
 ## API surface
 
-The server hosts two JSON endpoints under `/api/` (CORS-enabled so the
-page also works from `file://`):
+The server hosts two JSON endpoints under `/api/` (CORS-enabled for
+cross-origin calls):
 
 - `GET /health` — `{ ok, configured, baseUrl, model, node }`. The API key is never returned.
 - `POST /chat/completions` — pass-through proxy to `{APERTUS_BASE_URL}/chat/completions`.

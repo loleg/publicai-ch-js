@@ -78,17 +78,12 @@
     return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
   }
 
-  // Default deployment: the origin of the script URL (widget.js served by the
-  // deployment itself). file:// pages fall back to the local demo server, like
-  // the chat client does.
+  // Default deployment: the origin of the script URL. There is no fallback —
+  // widget.js must be served by the deployment itself, and file:// pages are
+  // not supported (see the README).
   function deploymentUrl(tag) {
-    try {
-      var src = new URL(tag && tag.src ? tag.src : location.href);
-      if (src.protocol === 'http:' || src.protocol === 'https:') return src.origin;
-    } catch (error) {
-      // Unparseable URL — fall through to the local default.
-    }
-    return 'http://localhost:5173';
+    // tag.src is the resolved absolute URL of the script tag.
+    return new URL(tag && tag.src ? tag.src : location.href).origin;
   }
 
   var hostConfig = window.ApertusChatWidget || {};

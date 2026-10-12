@@ -16,12 +16,8 @@
 (function () {
   /* --- Configuration ------------------------------------------------------ */
 
-  // When the page is opened directly from the file system, fall back to the
-  // default proxy address so "open index.html + npm start" also works.
-  const API_BASE =
-    location.protocol === 'file:'
-      ? 'http://localhost:5173/api'
-      : 'api';
+  // Same-origin proxy path — a running server or deployment is required.
+  const API_BASE = 'api';
 
   const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB per attachment
   const AUDIO_FORMATS = {
