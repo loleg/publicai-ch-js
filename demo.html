@@ -82,8 +82,8 @@
             — calls <code>ApertusChat.open()</code>.
         </p>
         <p class="mode-links">
-            Mode: <a href="?mode=window">window</a> ·
-            <a href="?mode=panel">panel</a> —
+            Mode: new <a href="?mode=window">window</a> ·
+            overlay <a href="?mode=panel">panel</a> —
             current mode: <code id="current-mode">…</code>
         </p>
 
@@ -100,7 +100,7 @@
     <script>
         // Programmatic configuration — data-* attributes on the script tag win
         // over this object. The demo picks the mode from the query string.
-        var mode = new URLSearchParams(location.search).get('mode') === 'panel' ? 'panel' : 'window';
+        var mode = new URLSearchParams(location.search).get('mode') === 'window' ? 'window' : 'panel';
         window.ApertusChatWidget = { mode: mode };
         document.getElementById('current-mode').textContent = mode;
         document.getElementById('open-chat').addEventListener('click', function () {

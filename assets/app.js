@@ -660,13 +660,15 @@
     beginEdit(Number(button.dataset.editIndex));
   });
 
-  samplePrompts.addEventListener('click', function (event) {
-    const button = event.target.closest('.sample-prompt');
-    if (!button) return;
-    promptInput.value = button.textContent.trim();
-    autoGrow();
-    promptInput.focus();
-  });
+  if (samplePrompts) {
+    samplePrompts.addEventListener('click', function (event) {
+      const button = event.target.closest('.sample-prompt');
+      if (!button) return;
+      promptInput.value = button.textContent.trim();
+      autoGrow();
+      promptInput.focus();
+    });
+  }
 
   /* --- Health check ----------------------------------------------------------------------- */
 
