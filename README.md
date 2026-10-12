@@ -2,7 +2,9 @@
 
 A standalone chat client in the spirit of the Hugging Face chat interface: attach pictures or sound
 clips, edit any prompt to regenerate from that point, and stream answers from an
-OpenAI-compatible API through a small Node.js proxy.
+OpenAI-compatible API through a small Node.js proxy. An embeddable widget
+(`assets/widget.js`) opens the same chat as a pop-up on any third-party website —
+see [Chat widget for third-party websites](#chat-widget-for-third-party-websites).
 
 The UI is based on the design system of [swiss-ai.org](https://swiss-ai.github.io/design-system/)
 
@@ -47,6 +49,125 @@ APERTUS_MODEL=swissai/Apertus-v1.5-8B npm start
 APERTUS_BASE_URL=http://localhost:8000/v1 APERTUS_API_KEY=local npm start
 ```
 
+## Chat widget
+
+`assets/widget.js` is a self-contained, zero-dependency script that adds a
+floating launcher button to any page and opens the chat in a **pop-up browser
+window** (default) or an **in-page panel** with an embedded iframe. It injects
+its own namespaced styles, so it neither inherits host stylesheets nor leaks
+its own, and it holds no secrets: the chat inside the pop-up talks to the
+`/api` proxy of the deployment that serves the widget.
+
+To try it
+locally, run `npm start` and open <http://localhost:5173/demo.html>, a
+page that pretends to be a third-party site (including a clashing CSS reset
+and a high stacking-order header).
+
+### Adding to your site
+
+1. Deploy this repository as documented above.
+2. Paste one script tag before `</body>`:
+
+```html
+<script src="https://<your address>/assets/widget.js" defer></script>
+```
+
+That is all when the script is served by the deployment itself — the widget
+derives the deployment origin from its own URL. If you mirror `widget.js` onto
+a CDN or another origin, point it at the deployment with `data-url`:
+
+```html
+<script src="https://<your address>/apertus/widget.js"
+        data-url="https://<your address>" defer></script>
+```
+
+The pop-up loads `/popup.html` from the deployment — a chat-only page without
+the demo header and footer, running the same client as `index.html`. 
+
+### Configuration
+
+Set options with `data-*` attributes on the script tag; the same keys are also
+accepted on a `window.ApertusChatWidget` object defined before the script
+loads. `data-*` attributes win over the global object, which wins over the
+defaults.
+
+| `data-*` attribute | Global key  | Default              | Purpose                                                              |
+| ------------------ | ----------- | -------------------- | -------------------------------------------------------------------- |
+| `data-url`         | `url`       | script origin        | Deployment base URL; the pop-up loads `<url>/popup.html`.            |
+| `data-mode`        | `mode`      | `window`             | `window` (pop-up browser window) or `panel` (in-page dialog + iframe). |
+| `data-label`       | `label`     | `Chat with Apertus`  | Accessible name and `title` of the launcher and panel.               |
+| `data-position`    | `position`  | `right`              | `right` or `left` corner for the launcher (and panel).               |
+| `data-width`       | `width`     | `420`                | Pop-up width in px (window mode), clamped to the screen.             |
+| `data-height`      | `height`    | `640`                | Pop-up height in px (window mode), clamped to the screen.            |
+
+### Programmatic API
+
+The widget exposes a small API on `window.ApertusChat`:
+
+```js
+ApertusChat.open();    // open the pop-up window (or panel)
+ApertusChat.close();   // close the panel; window mode closes the pop-up
+ApertusChat.toggle();  // open/focus, or close the panel
+```
+
+Example — open the chat from your own button:
+
+```html
+<button onclick="ApertusChat.open()">Ask Apertus</button>
+```
+
+### Modes and behavior
+
+- **`window` (default)** — opens a centered pop-up browser window named
+  `apertus-chat` via `window.open()`; clicking the launcher again focuses the
+  existing window instead of opening a second one. Because it is a real
+  window, it works no matter how the deployment sets framing headers. If the
+  browser blocks the pop-up, the widget shows a dismissible notice with a
+  fallback link that opens the chat in a new tab.
+- **`panel`** — a fixed in-page dialog with an iframe pointing at the same
+  `/popup.html`, loaded lazily on first open and kept across close/open so the
+  conversation survives. This mode requires the deployment to allow framing:
+  the server in this repo sets neither `X-Frame-Options` nor a CSP
+  `frame-ancestors` directive, so it works out of the box, but a reverse proxy
+  that adds `X-Frame-Options: DENY` (or similar) will blank the panel — use
+  `window` mode there.
+
+The launcher is a real `<button>` (56×56 px) with `aria-haspopup="dialog"`,
+`aria-expanded`, and a visible focus ring; the panel is a `role="dialog"` with
+an accessible name; animations are disabled under `prefers-reduced-motion`.
+
+### Theming
+
+Every color, shadow, and offset in the injected stylesheet is a CSS custom
+property with a design-system fallback, so a host site can re-theme the widget
+without touching it:
+
+```css
+:root {
+  --apertus-launcher-bg: #003a70;
+  --apertus-launcher-hover: #00509e;
+  --apertus-launcher-offset: 16px;
+}
+```
+
+Available properties: `--apertus-launcher-bg/-fg/-hover/-border/-shadow/-offset`,
+`--apertus-panel-bg/-width/-height/-radius/-shadow/-offset`,
+`--apertus-panel-header-bg/-fg`, `--apertus-toast-bg/-fg/-border`,
+`--apertus-border`, `--apertus-focus-ring`, and `--apertus-z-index`. The widget
+does not load web fonts itself; it uses `Inter` and `Geist Mono` when the host
+page provides them and falls back to system fonts otherwise.
+
+### Security notes
+
+- Only the public URL of your deployment is embedded. `APERTUS_API_KEY` stays
+  on the server, and the widget and pop-up hold no secrets.
+- The chat page runs on the deployment's origin inside the pop-up or iframe
+  and does not read cookies or storage from the host page. Conversations are
+  kept in memory only — a new pop-up or a page reload starts empty; the panel
+  keeps its conversation until the host page is reloaded.
+- Anyone you give the widget to can spend your proxy quota — put rate limits
+  or authentication in front of `/api` before embedding it publicly.
+
 ## API surface
 
 The server hosts two JSON endpoints under `/api/` (CORS-enabled so the
@@ -71,6 +192,8 @@ capped at 10 MB per attachment client-side and 32 MB per request server-side.
   conversation and regenerates from that point.
 - Sample prompts, composer validation, 10 MB attachment cap, markdown-lite rendering
   (paragraphs, `code`, **bold** — HTML is escaped before any transformation).
+- Embeddable widget (`assets/widget.js`): launcher button that opens the chat in a
+  pop-up window or an in-page panel on any third-party site.
 - Proxy status chip in the header plus dismissible setup notices; the page renders and
   reads fine without JavaScript or without the proxy.
 
@@ -92,10 +215,15 @@ capped at 10 MB per attachment client-side and 32 MB per request server-side.
   package.json        # start + test scripts, zero dependencies
   server.js           # static server (repo root) + OpenAI-compatible proxy
   index.html          # single-page app shell
+  popup.html          # chat-only page for the widget pop-up / panel
+  demo.html    # fake third-party page embedding the widget
   test/
     smoke.js          # zero-dependency handler smoke test (npm test)
   assets/
+    swiss-ai.css      # design-system bundle (compiled, do not edit)
     app.css           # chat components on the design-system tokens
     app.js            # chat client, progressive enhancement
+    widget.js         # embeddable launcher: pop-up window / in-page panel
+    popup.css         # chat-only layout for popup.html
     favicon.svg
 ```

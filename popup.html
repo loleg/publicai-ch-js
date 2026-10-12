@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apertus Chat</title>
+    <meta name="description" content="Apertus chat pop-up: attach images or sound clips, edit prompts, and stream answers from an OpenAI-compatible API.">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#EAF5F8">
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;900&amp;family=Geist+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+
+    <!-- Design system -->
+    <link rel="stylesheet" href="assets/swiss-ai.css">
+
+    <!-- Demo-specific components (chat, composer, attachments, notices) -->
+    <link rel="stylesheet" href="assets/app.css">
+
+    <!-- Chat-only layout for the widget pop-up / panel -->
+    <link rel="stylesheet" href="assets/popup.css">
+</head>
+<body class="popup-page">
+    <!-- Skip Link — first focusable element -->
+    <a href="#prompt-input" class="skip-link">Skip to the message box</a>
+
+    <!-- Compact header -->
+    <header class="popup-header">
+        <h1 class="popup-wordmark">APERTUS</h1>
+
+        <p class="status-chip" id="status-chip" data-state="checking" role="status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="status-text">Checking proxy…</span>
+        </p>
+
+        <a class="popup-open-full" href="index.html">Open full page</a>
+    </header>
+
+    <main class="popup-main" id="main">
+        <div class="chat-shell popup-shell">
+            <div class="notice-region" id="notice-region"></div>
+
+            <ol class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation">
+                <li class="chat-empty hidden" id="chat-empty">
+                    <svg style="zoom:0.5" viewBox="0 0 64 64" aria-hidden="true" class="empty-emblem">
+                        <path d="M32 6 54 19v26L32 58 10 45V19Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M32 18 44 25v14L32 46 20 39V25Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="32" cy="32" r="4" fill="currentColor"/>
+                    </svg>
+                </li>
+            </ol>
+
+            <p class="mono-caption popup-samples-caption">Sample prompts — choose one to fill the composer:</p>
+            <div class="sample-prompts" id="sample-prompts">
+                <button type="button" class="button button--elevated sample-prompt">What is the Swiss AI Initiative?</button>
+                <button type="button" class="button button--elevated sample-prompt">Explain open weights in simple terms.</button>
+                <button type="button" class="button button--elevated sample-prompt">What is the Apache 2.0 license?</button>
+                <button type="button" class="button button--elevated sample-prompt">Where can I learn more about Apertus?</button>
+            </div>
+
+            <form class="composer" id="composer">
+                <div class="attachment-tray" id="attachment-tray" hidden></div>
+
+                <div class="edit-bar hidden" id="edit-bar" hidden>
+                    <span id="edit-bar-text">Editing prompt — sending will regenerate the conversation from here.</span>
+                    <button type="button" class="button button--text" id="edit-bar-cancel">Cancel edit</button>
+                </div>
+
+                <div class="composer-row">
+                    <label class="visually-hidden" for="prompt-input">Prompt</label>
+                    <textarea id="prompt-input" name="prompt" rows="2" placeholder="Ask Apertus anything…" autocomplete="off" spellcheck="true"></textarea>
+                </div>
+
+                <div class="composer-actions">
+                    <button type="button" class="button button--outlined attach-button" id="attach-button">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.5 12.5 21a5.5 5.5 0 0 1-7.8-7.8l8.6-8.6a3.7 3.7 0 0 1 5.2 5.2l-8.6 8.6a1.8 1.8 0 0 1-2.6-2.6l7.9-7.9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span>Add image or audio</span>
+                    </button>
+                    <input type="file" id="file-input" class="visually-hidden" accept="image/*,audio/wav,audio/x-wav,audio/wave,audio/mpeg,audio/mp3" multiple>
+                    <span class="composer-spacer" aria-hidden="true"></span>
+                    <button type="button" class="button button--outlined" id="clear-button">Clear</button>
+                    <button type="button" class="button button--filled-dark" id="stop-button" hidden>Stop</button>
+                    <button type="submit" class="button button--filled" id="send-button">Send</button>
+                </div>
+
+                <p class="composer-hint mono-caption">Enter to send · Shift+Enter for a new line. Responses are generated by the configured model — sample demo, verify important information independently.</p>
+            </form>
+        </div>
+    </main>
+
+    <!-- JavaScript — progressive enhancement only -->
+    <script src="assets/app.js" defer></script>
+    <script>
+        // Focus the composer as soon as the pop-up (or panel) opens.
+        document.getElementById('prompt-input').focus();
+    </script>
+</body>
+</html>

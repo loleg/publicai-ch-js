@@ -123,19 +123,37 @@ async function run() {
   check('demo page 200', demo.statusCode === 200);
   check('demo page is HTML', String(demo.headers['content-type'] || '').includes('text/html'));
   check('demo page contains the app heading', demo.text().includes('id="demo-title"'));
-  check('demo page links the design-system tokens', demo.text().includes('../src/styles/tokens.css'));
+  check('demo page links the design-system bundle', demo.text().includes('assets/swiss-ai.css'));
 
   const root = await get('/');
   check('repo index 200', root.statusCode === 200);
 
-  const tokens = await get('/src/styles/tokens.css');
-  check('design-system tokens.css served', tokens.statusCode === 200 && tokens.text().includes('--color-sky-blue-1-5'));
+  const designSystem = await get('/assets/swiss-ai.css');
+  check('design-system bundle served', designSystem.statusCode === 200 && designSystem.text().includes('--color-sky-blue-1-5'));
 
   const appCss = await get('/assets/app.css');
   check('demo app.css served', appCss.statusCode === 200);
 
   const appJs = await get('/assets/app.js');
   check('demo app.js served', appJs.statusCode === 200);
+
+  // Widget surfaces
+  const widgetJs = await get('/assets/widget.js');
+  check('widget.js served', widgetJs.statusCode === 200);
+  check('widget.js is JavaScript', String(widgetJs.headers['content-type'] || '').includes('text/javascript'));
+  check('widget.js opens the chat pop-up', widgetJs.text().includes('popup.html') && widgetJs.text().includes('window.open'));
+
+  const popup = await get('/popup.html');
+  check('popup page 200', popup.statusCode === 200);
+  check('popup page is HTML', String(popup.headers['content-type'] || '').includes('text/html'));
+  check('popup page contains the chat log and composer', popup.text().includes('id="chat-log"') && popup.text().includes('id="composer"'));
+  check('popup page loads the chat client', popup.text().includes('assets/app.js'));
+
+  const popupCss = await get('/assets/popup.css');
+  check('popup.css served', popupCss.statusCode === 200);
+
+  const widgetDemo = await get('/demo.html');
+  check('widget demo page 200', widgetDemo.statusCode === 200);
 
   const missing = await get('/definitely-not-here');
   check('unknown path 404', missing.statusCode === 404);

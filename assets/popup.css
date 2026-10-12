@@ -1,0 +1,88 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Apertus pop-up — chat-only layout for the widget's pop-up window and panel.
+ *
+ * popup.html reuses the chat components from app.css on the design-system
+ * tokens; this sheet only adapts the page to a small window: a compact header,
+ * a document-level scroll (so the client's auto-scroll keeps working) and a
+ * composer pinned to the bottom edge with sticky positioning.
+ */
+
+.popup-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Compact header — wordmark, proxy status, link to the full page */
+.popup-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky, 10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  padding: var(--space-8) var(--space-16);
+  background-color: var(--md-sys-color-surface);
+  border-block-end: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.popup-wordmark {
+  font-family: var(--md-ref-typeface-brand);
+  font-weight: var(--md-ref-weight-black);
+  font-size: 14px;
+  letter-spacing: 0.28em;
+  color: var(--md-sys-color-on-surface);
+  margin: 0;
+}
+
+.popup-open-full {
+  font-family: var(--md-ref-typeface-mono);
+  font-size: var(--md-sys-typescale-mono-small-size);
+  color: var(--md-sys-color-on-surface);
+  text-decoration: underline;
+  text-decoration-color: var(--md-sys-color-primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.popup-open-full:hover {
+  color: var(--md-sys-color-primary-interactive);
+  text-decoration-color: var(--md-sys-color-primary-interactive);
+}
+
+/* Fill the window so the composer reaches the bottom edge */
+.popup-main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-shell {
+  max-width: none;
+  padding-inline: var(--space-16);
+  flex: 1;
+  gap: var(--space-16);
+}
+
+.popup-shell .chat-log {
+  padding-block-end: var(--space-8);
+}
+
+.popup-samples-caption {
+  margin-block-end: 0;
+}
+
+/* Pin the composer to the bottom edge; the log scrolls the page normally,
+   which keeps the client's isNearBottom()/scrollToBottom() logic intact. */
+.popup-shell .composer {
+  position: sticky;
+  bottom: 0;
+  z-index: var(--z-sticky, 10);
+  margin-inline: calc(-1 * var(--space-16));
+  border-radius: 0;
+  border-block-start: 1px solid var(--md-sys-color-outline-variant);
+  padding-block-end: calc(var(--space-16) + env(safe-area-inset-bottom, 0px));
+}
