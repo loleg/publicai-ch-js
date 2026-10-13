@@ -6,7 +6,7 @@
  *   - proxy health check with status chip and setup notices
  *   - prompt composer (Enter to send, Shift+Enter for newline, auto-grow)
  *   - image and audio attachments (OpenAI-compatible vision + input_audio)
- *   - streaming responses over SSE with a Stop button
+ *   - streaming responses over SSE with a Clear button that stops generation
  *   - prompt editing: resend regenerates the conversation from that point
  *   - sample prompts, markdown-lite rendering, Clear
  *
@@ -16,12 +16,8 @@
 (function () {
   /* --- Configuration ------------------------------------------------------ */
 
-  // When the page is opened directly from the file system, fall back to the
-  // default proxy address so "open index.html + npm start" also works.
-  const API_BASE =
-    location.protocol === 'file:'
-      ? 'http://localhost:5173/api'
-      : 'api';
+  // Same-origin proxy path — a running server or deployment is required.
+  const API_BASE = 'api';
 
   const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB per attachment
   const AUDIO_FORMATS = {
@@ -61,7 +57,6 @@
   const composer = element('composer');
   const promptInput = element('prompt-input');
   const sendButton = element('send-button');
-  const stopButton = element('stop-button');
   const clearButton = element('clear-button');
   const attachButton = element('attach-button');
   const fileInput = element('file-input');
@@ -457,8 +452,11 @@
 
   function setGenerating(active) {
     state.generating = active;
-    stopButton.hidden = !active;
     sendButton.hidden = active;
+    // One CLEAR button serves both roles: it stops generation while a response
+    // is streaming, and clears the dialog otherwise. Update its accessible name
+    // to match the role it currently plays.
+    clearButton.setAttribute('aria-label', active ? 'Stop generation' : 'Clear the conversation');
     if (active) {
       chatLog.setAttribute('aria-busy', 'true');
     } else {
@@ -638,12 +636,14 @@
     }
   });
 
-  stopButton.addEventListener('click', function () {
-    if (state.controller) state.controller.abort();
-  });
-
   clearButton.addEventListener('click', function () {
-    if (state.controller) state.controller.abort();
+    // Retrieval in progress: CLEAR acts as STOP.
+    if (state.generating) {
+      if (state.controller) state.controller.abort();
+      return;
+    }
+
+    // No generation in progress: clear the dialog.
     state.messages = [];
     state.editingIndex = null;
     state.attachments = [];
@@ -664,13 +664,15 @@
     beginEdit(Number(button.dataset.editIndex));
   });
 
-  samplePrompts.addEventListener('click', function (event) {
-    const button = event.target.closest('.sample-prompt');
-    if (!button) return;
-    promptInput.value = button.textContent.trim();
-    autoGrow();
-    promptInput.focus();
-  });
+  if (samplePrompts) {
+    samplePrompts.addEventListener('click', function (event) {
+      const button = event.target.closest('.sample-prompt');
+      if (!button) return;
+      promptInput.value = button.textContent.trim();
+      autoGrow();
+      promptInput.focus();
+    });
+  }
 
   /* --- Health check ----------------------------------------------------------------------- */
 

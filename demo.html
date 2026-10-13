@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget demo — a page that looks like your website</title>
+    <meta name="robots" content="noindex">
+    <style>
+        /* Deliberately plain "third-party" styling, including rules that could
+           clash with an embedded widget: an aggressive button reset and a host
+           header with a high stacking order. The widget must still render and
+           sit on top of it. */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            color: #222;
+            background: #f6f6f2;
+            line-height: 1.6;
+        }
+        button { padding: 0; margin: 0; background: none; border: none; font: inherit; color: inherit; }
+
+        .host-header {
+            position: relative;
+            z-index: 9999;
+            background: #222;
+            color: #fff;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .host-header strong { letter-spacing: 0.08em; }
+
+        main { max-width: 720px; margin: 0 auto; padding: 40px 24px 160px; }
+        h1 { font-size: 28px; line-height: 1.2; margin: 0 0 16px; }
+        h2 { font-size: 20px; margin: 32px 0 8px; }
+        code { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 0.9em; background: #eceadf; padding: 2px 6px; border-radius: 4px; }
+
+        .host-button {
+            padding: 10px 20px;
+            background: #222;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .host-button:hover { background: #444; }
+
+        .mode-links a { color: #222; }
+        .fake-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 24px; }
+        .fake-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; min-height: 120px; }
+        .fake-card h3 { margin: 0 0 4px; font-size: 15px; }
+        .fake-card p { margin: 0; font-size: 14px; color: #555; }
+    </style>
+</head>
+<body>
+    <header class="host-header">
+        <strong>EXAMPLE CORP</strong>
+        <span>This page pretends to be your website</span>
+    </header>
+
+    <main>
+        <p class="label">Widget demo</p>
+        <h1>Apertus chat widget on a third-party page</h1>
+        <p>
+            This page is not part of the Apertus demo UI — it stands in for a website
+            where the chat widget has been embedded. Use the launcher button in the
+            bottom corner to open the chat in a pop-up window.
+        </p>
+        <p>
+            The widget styles itself with namespaced, injected CSS, so the host page's
+            button reset and stacking order above do not affect it. Configuration and
+            embedding instructions are documented in the repository README under
+            “Chat widget for third-party websites”.
+        </p>
+
+        <h2>Programmatic API</h2>
+        <p>
+            <button type="button" class="host-button" id="open-chat">Open the chat</button>
+            — calls <code>ApertusChat.open()</code>.
+        </p>
+        <p class="mode-links">
+            Mode: new <a href="?mode=window">window</a> ·
+            overlay <a href="?mode=panel">panel</a> —
+            current mode: <code id="current-mode">…</code>
+        </p>
+
+        <h2>Scrollable filler</h2>
+        <p>Scroll down and open the chat to confirm the launcher stays fixed while the page moves.</p>
+        <div class="fake-grid">
+            <div class="fake-card"><h3>Fake feature</h3><p>Placeholder content.</p></div>
+            <div class="fake-card"><h3>Another one</h3><p>More placeholder content.</p></div>
+            <div class="fake-card"><h3>Third card</h3><p>Even more placeholder content.</p></div>
+            <div class="fake-card"><h3>Fourth card</h3><p>The last placeholder card.</p></div>
+        </div>
+    </main>
+
+    <script>
+        // Programmatic configuration — data-* attributes on the script tag win
+        // over this object. The demo picks the mode from the query string.
+        var mode = new URLSearchParams(location.search).get('mode') === 'window' ? 'window' : 'panel';
+        window.ApertusChatWidget = { mode: mode };
+        document.getElementById('current-mode').textContent = mode;
+        document.getElementById('open-chat').addEventListener('click', function () {
+            window.ApertusChat.open();
+        });
+    </script>
+    <!-- The widget — served by the Apertus deployment; same origin here, so
+         no data-url is needed. -->
+    <script src="assets/widget.js" defer></script>
+</body>
+</html>

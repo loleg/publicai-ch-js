@@ -1,9 +1,19 @@
 {
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["index.html", "assets/**"] }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "node",
+  "routes": [
+      {
+        "src": "/",
+        "headers": { "cache-control": "s-maxage=1000" },
+        "dest": "/index.html"
+      },
+      {
+        "src": "/api", "dest": "/server.js"
+      }
+  ],
+  "functions": {
+    "server.js": {
+      "includeFiles": "**"
     }
-  ]
+  }
 }

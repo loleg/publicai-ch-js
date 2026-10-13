@@ -133,7 +133,7 @@ async function handleChatCompletions(req, res) {
   }
   if (!payload.model) payload.model = MODEL;
 
-  // Stop the upstream request when the browser disconnects (Stop button).
+  // Stop the upstream request when the browser disconnects (Clear button while generating).
   const upstream = new AbortController();
   req.on('close', () => {
     if (!res.writableEnded) upstream.abort();
