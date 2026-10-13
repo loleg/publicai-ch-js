@@ -6,7 +6,7 @@
  *   - proxy health check with status chip and setup notices
  *   - prompt composer (Enter to send, Shift+Enter for newline, auto-grow)
  *   - image and audio attachments (OpenAI-compatible vision + input_audio)
- *   - streaming responses over SSE with a Stop button
+ *   - streaming responses over SSE with a Clear button that stops generation
  *   - prompt editing: resend regenerates the conversation from that point
  *   - sample prompts, markdown-lite rendering, Clear
  *
@@ -57,7 +57,6 @@
   const composer = element('composer');
   const promptInput = element('prompt-input');
   const sendButton = element('send-button');
-  const stopButton = element('stop-button');
   const clearButton = element('clear-button');
   const attachButton = element('attach-button');
   const fileInput = element('file-input');
@@ -453,8 +452,11 @@
 
   function setGenerating(active) {
     state.generating = active;
-    stopButton.hidden = !active;
     sendButton.hidden = active;
+    // One CLEAR button serves both roles: it stops generation while a response
+    // is streaming, and clears the dialog otherwise. Update its accessible name
+    // to match the role it currently plays.
+    clearButton.setAttribute('aria-label', active ? 'Stop generation' : 'Clear the conversation');
     if (active) {
       chatLog.setAttribute('aria-busy', 'true');
     } else {
@@ -634,12 +636,14 @@
     }
   });
 
-  stopButton.addEventListener('click', function () {
-    if (state.controller) state.controller.abort();
-  });
-
   clearButton.addEventListener('click', function () {
-    if (state.controller) state.controller.abort();
+    // Retrieval in progress: CLEAR acts as STOP.
+    if (state.generating) {
+      if (state.controller) state.controller.abort();
+      return;
+    }
+
+    // No generation in progress: clear the dialog.
     state.messages = [];
     state.editingIndex = null;
     state.attachments = [];

@@ -179,8 +179,8 @@ cross-origin calls):
 - `POST /chat/completions` — pass-through proxy to `{APERTUS_BASE_URL}/chat/completions`.
   Supports OpenAI-compatible request bodies, including `stream: true` (Server-Sent Events
   are piped through untouched) and vision/`input_audio` content parts. Browser
-  disconnections (Stop button) abort the upstream request. Errors from the upstream API
-  are forwarded with their original status code.
+  disconnections (Clear button while generating) abort the upstream request. Errors from
+  the upstream API are forwarded with their original status code.
 
 Attachments travel as base64: images as `image_url` data URLs (any `image/*`), sound
 clips as `input_audio` parts (WAV and MP3, per the OpenAI audio format). File size is
@@ -188,7 +188,8 @@ capped at 10 MB per attachment client-side and 32 MB per request server-side.
 
 ## Features
 
-- Chat log with user/assistant bubbles, streaming responses, and a Stop button.
+- Chat log with user/assistant bubbles, streaming responses, and a single Clear button
+  that stops generation while a response is streaming and clears the dialog otherwise.
 - Attach pictures (rendered inline) and sound clips (rendered with an audio player).
 - Prompt editing: every user message has an edit action; sending an edit truncates the
   conversation and regenerates from that point.
