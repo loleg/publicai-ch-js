@@ -542,6 +542,8 @@
       }
     } finally {
       setGenerating(false);
+      // Drop the blinking caret from any bubble still in the log.
+      bubble.classList.remove('is-streaming');
       if (!sendButton.hidden) sendButton.focus();
     }
   }
