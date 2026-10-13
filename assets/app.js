@@ -354,7 +354,7 @@
     item.className = 'message message--error';
     const role = document.createElement('p');
     role.className = 'message-role';
-    role.textContent = 'Proxy';
+    role.textContent = 'Apertus';
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
     bubble.textContent = message;
