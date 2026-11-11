@@ -6,7 +6,7 @@ OpenAI-compatible API through a small Node.js proxy. An embeddable widget
 (`assets/widget.js`) opens the same chat as a pop-up on any third-party website —
 see [Chat widget](#chat-widget).
 
-The UI is based on the design system of [swiss-ai.org](https://swiss-ai.github.io/design-system/)
+The UI is based on the design system of [Public AI](https://publicai.ch) (red brand, Public Sans)
 
 ## Quickstart
 
@@ -223,7 +223,7 @@ capped at 10 MB per attachment client-side and 32 MB per request server-side.
   test/
     smoke.js          # zero-dependency handler smoke test (npm test)
   assets/
-    swiss-ai.css      # design-system bundle (compiled, do not edit)
+    public-ai.css     # Public AI retheme of the design-system bundle
     app.css           # chat components on the design-system tokens
     app.js            # chat client, progressive enhancement
     widget.js         # embeddable launcher: pop-up window / in-page panel

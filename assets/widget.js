@@ -110,12 +110,12 @@
    * provides them and falls back to system fonts.
    * ------------------------------------------------------------------------ */
 
-  var FONT_STACK = "'Inter','Helvetica Neue',Arial,system-ui,sans-serif";
+  var FONT_STACK = "'Public Sans','Helvetica Neue',Arial,system-ui,sans-serif";
 
   var STYLE = [
-    '#apertus-chat-launcher{position:fixed;bottom:var(--apertus-launcher-offset,24px);right:var(--apertus-launcher-offset,24px);z-index:var(--apertus-z-index,2147483000);display:flex;align-items:center;justify-content:center;width:56px;height:56px;padding:0;margin:0;font:inherit;box-sizing:border-box;background-color:var(--apertus-launcher-bg,#2E2F31);color:var(--apertus-launcher-fg,#FFFFFF);border:1px solid var(--apertus-launcher-border,transparent);border-radius:9999px;box-shadow:var(--apertus-launcher-shadow,0 6px 18px rgba(46,47,49,0.24));cursor:pointer;transition:background-color 150ms cubic-bezier(0.2,0,0,1),transform 150ms cubic-bezier(0.2,0,0,1)}',
+    '#apertus-chat-launcher{position:fixed;bottom:var(--apertus-launcher-offset,24px);right:var(--apertus-launcher-offset,24px);z-index:var(--apertus-z-index,2147483000);display:flex;align-items:center;justify-content:center;width:56px;height:56px;padding:0;margin:0;font:inherit;box-sizing:border-box;background-color:var(--apertus-launcher-bg,#E42A11);color:var(--apertus-launcher-fg,#FFFFFF);border:1px solid var(--apertus-launcher-border,transparent);border-radius:9999px;box-shadow:var(--apertus-launcher-shadow,0 6px 18px rgba(239,60,36,0.24));cursor:pointer;transition:background-color 150ms cubic-bezier(0.2,0,0,1),transform 150ms cubic-bezier(0.2,0,0,1)}',
     '#apertus-chat-launcher.apertus-chat-launcher--left{right:auto;left:var(--apertus-launcher-offset,24px)}',
-    '#apertus-chat-launcher:hover{background-color:var(--apertus-launcher-hover,#43464A)}',
+    '#apertus-chat-launcher:hover{background-color:var(--apertus-launcher-hover,#EF3C24)}',
     '#apertus-chat-launcher:active{transform:translateY(1px)}',
     '#apertus-chat-launcher:focus-visible{outline:3px solid var(--apertus-focus-ring,#FF0000);outline-offset:2px}',
     '#apertus-chat-launcher .apertus-chat-launcher-icon{display:flex}',
@@ -126,8 +126,8 @@
     '#apertus-chat-panel{position:fixed;bottom:var(--apertus-panel-offset,96px);right:var(--apertus-launcher-offset,24px);z-index:var(--apertus-z-index,2147483000);display:flex;flex-direction:column;width:min(var(--apertus-panel-width,400px),calc(100vw - 32px));height:min(var(--apertus-panel-height,640px),calc(100vh - 136px));padding:0;margin:0;box-sizing:border-box;background-color:var(--apertus-panel-bg,#FFFFFF);border:1px solid var(--apertus-border,rgba(46,47,49,0.16));border-radius:var(--apertus-panel-radius,6px);box-shadow:var(--apertus-panel-shadow,0 8px 24px rgba(46,47,49,0.18));overflow:hidden}',
     '#apertus-chat-panel.apertus-chat-panel--left{right:auto;left:var(--apertus-launcher-offset,24px)}',
     '#apertus-chat-panel[hidden]{display:none}',
-    '#apertus-chat-panel .apertus-chat-panel-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8,8px);padding:4px 4px 4px 16px;box-sizing:border-box;background-color:var(--apertus-panel-header-bg,#EAF5F8);border-bottom:1px solid var(--apertus-border,rgba(46,47,49,0.16))}',
-    '#apertus-chat-panel .apertus-chat-panel-title{margin:0;font-family:var(--apertus-font-brand,' + FONT_STACK + ');font-weight:900;font-size:13px;line-height:1.2;letter-spacing:0.28em;color:var(--apertus-panel-header-fg,#2E2F31)}',
+    '#apertus-chat-panel .apertus-chat-panel-header{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8,8px);padding:4px 4px 4px 16px;box-sizing:border-box;background-color:var(--apertus-panel-header-bg,#FBE9E7);border-bottom:1px solid var(--apertus-border,rgba(239,60,36,0.16))}',
+    '#apertus-chat-panel .apertus-chat-panel-title{margin:0;font-family:var(--apertus-font-brand,' + FONT_STACK + ');font-weight:900;font-size:13px;line-height:1.2;letter-spacing:0.28em;color:var(--apertus-panel-header-fg,#141418)}',
     '#apertus-chat-panel .apertus-chat-panel-close{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;margin:0;background:none;border:0;border-radius:4px;color:var(--apertus-panel-header-fg,#2E2F31);cursor:pointer;transition:background-color 150ms cubic-bezier(0.2,0,0,1)}',
     '#apertus-chat-panel .apertus-chat-panel-close:hover{background-color:rgba(46,47,49,0.08)}',
     '#apertus-chat-panel .apertus-chat-panel-close:focus-visible{outline:3px solid var(--apertus-focus-ring,#FF0000);outline-offset:-1px}',

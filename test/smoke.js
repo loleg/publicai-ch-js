@@ -123,12 +123,12 @@ async function run() {
   check('demo page 200', demo.statusCode === 200);
   check('demo page is HTML', String(demo.headers['content-type'] || '').includes('text/html'));
   check('demo page contains the app heading', demo.text().includes('id="demo-title"'));
-  check('demo page links the design-system bundle', demo.text().includes('assets/swiss-ai.css'));
+  check('demo page links the design-system bundle', demo.text().includes('assets/public-ai.css'));
 
   const root = await get('/');
   check('repo index 200', root.statusCode === 200);
 
-  const designSystem = await get('/assets/swiss-ai.css');
+  const designSystem = await get('/assets/public-ai.css');
   check('design-system bundle served', designSystem.statusCode === 200 && designSystem.text().includes('--color-sky-blue-1-5'));
 
   const appCss = await get('/assets/app.css');

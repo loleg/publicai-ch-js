@@ -29,7 +29,7 @@
   };
 
   const SYSTEM_PROMPT =
-    'You are Apertus, an open multilingual foundation model built by the Swiss AI Initiative. ' +
+    'You are Apertus, an open multilingual foundation model built by the Public AI Cooperative. ' +
     'Answer clearly, precisely, and concisely.';
 
   const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');

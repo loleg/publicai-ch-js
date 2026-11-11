@@ -2,7 +2,7 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 /* Apertus demo server — zero-dependency Node.js (>= 18).
  *
- * 1. Serves the swiss-ai.org design-system repository statically
+ * 1. Serves the Public AI design-system bundle statically
  * 2. Exposes a minimal OpenAI-compatible proxy for the single-page app:
  *
  *      GET  /api/health
