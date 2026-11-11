@@ -110,7 +110,7 @@
    * provides them and falls back to system fonts.
    * ------------------------------------------------------------------------ */
 
-  var FONT_STACK = "'Public Sans','Helvetica Neue',Arial,system-ui,sans-serif";
+  var FONT_STACK = "'Public Sans Variable','Helvetica Neue',Arial,system-ui,sans-serif";
 
   var STYLE = [
     '#apertus-chat-launcher{position:fixed;bottom:var(--apertus-launcher-offset,24px);right:var(--apertus-launcher-offset,24px);z-index:var(--apertus-z-index,2147483000);display:flex;align-items:center;justify-content:center;width:56px;height:56px;padding:0;margin:0;font:inherit;box-sizing:border-box;background-color:var(--apertus-launcher-bg,#E42A11);color:var(--apertus-launcher-fg,#FFFFFF);border:1px solid var(--apertus-launcher-border,transparent);border-radius:9999px;box-shadow:var(--apertus-launcher-shadow,0 6px 18px rgba(239,60,36,0.24));cursor:pointer;transition:background-color 150ms cubic-bezier(0.2,0,0,1),transform 150ms cubic-bezier(0.2,0,0,1)}',
